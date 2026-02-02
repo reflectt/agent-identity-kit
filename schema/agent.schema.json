@@ -192,6 +192,36 @@
       },
       "additionalProperties": false
     },
+    "voice": {
+      "type": "object",
+      "description": "Voice and audio identity for the agent. Enables TTS-based interactions and audio branding.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the voice (e.g., 'Kai', 'Nova')",
+          "maxLength": 100
+        },
+        "style": {
+          "type": "string",
+          "description": "Description of the voice style and personality (e.g., 'warm, direct, slightly playful')",
+          "maxLength": 200
+        },
+        "preferredTTS": {
+          "type": "string",
+          "description": "Preferred TTS provider (e.g., 'elevenlabs', 'openai', 'google', 'azure')"
+        },
+        "voiceId": {
+          "type": "string",
+          "description": "Provider-specific voice identifier for consistent voice reproduction"
+        },
+        "sampleUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to a sample audio clip demonstrating the agent's voice"
+        }
+      },
+      "additionalProperties": false
+    },
     "links": {
       "type": "object",
       "description": "Additional links related to the agent",

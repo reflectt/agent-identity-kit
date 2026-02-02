@@ -147,7 +147,8 @@ Link: </.well-known/agent.json>; rel="agent-card"
 | `capabilities` | string[] | OPTIONAL | Standardized capability tags. See [§3.5](#35-capabilities). |
 | `protocols` | object | OPTIONAL | Interoperability protocol support. See [§3.6](#36-protocols-object). |
 | `endpoints` | object | OPTIONAL | Interaction URLs. See [§3.7](#37-endpoints-object). |
-| `trust` | object | OPTIONAL | Trust and verification metadata. See [§3.8](#38-trust-object). |
+| `voice` | object | OPTIONAL | Voice and audio identity. See [§3.8](#38-voice-object). |
+| `trust` | object | OPTIONAL | Trust and verification metadata. See [§3.9](#39-trust-object). |
 
 ### 3.2 `agent` Object
 
@@ -239,7 +240,25 @@ URLs for interacting with the agent. All fields are OPTIONAL.
 
 Custom endpoint keys are permitted.
 
-### 3.8 `trust` Object
+### 3.8 `voice` Object
+
+Describes the agent's voice and audio identity. This enables consistent voice experiences across TTS providers and gives agents a recognizable audio presence.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | OPTIONAL | Human-readable name of the voice (e.g., `"Kai"`, `"Nova"`). Max 100 characters. |
+| `style` | string | OPTIONAL | Description of the voice style and personality (e.g., `"warm, direct, slightly playful"`). Max 200 characters. |
+| `preferredTTS` | string | OPTIONAL | Preferred TTS provider (e.g., `"elevenlabs"`, `"openai"`, `"google"`, `"azure"`). |
+| `voiceId` | string | OPTIONAL | Provider-specific voice identifier for consistent voice reproduction. |
+| `sampleUrl` | string (URI) | OPTIONAL | URL to a sample audio clip demonstrating the agent's voice. SHOULD be an MP3 or WAV file. |
+
+**Usage notes:**
+
+- The `style` field is intended for both humans and TTS systems that accept style prompts.
+- The `voiceId` field is provider-specific. Consumers SHOULD fall back to `style` when the preferred provider is unavailable.
+- The `sampleUrl` allows humans and systems to preview the agent's voice before interaction.
+
+### 3.9 `trust` Object
 
 Machine-readable trust signals. See [§4 Trust Levels](#4-trust-levels) for detailed semantics.
 
@@ -249,10 +268,10 @@ Machine-readable trust signals. See [§4 Trust Levels](#4-trust-levels) for deta
 | `created` | string (ISO 8601) | OPTIONAL | When this agent identity was created. |
 | `updated` | string (ISO 8601) | OPTIONAL | When this card was last modified. |
 | `verified_by` | string[] | OPTIONAL | List of registries or verifiers that have validated this card. |
-| `attestations` | object[] | OPTIONAL | Third-party attestation records. See [§3.9](#39-attestations). |
+| `attestations` | object[] | OPTIONAL | Third-party attestation records. See [§3.10](#310-attestations). |
 | `ttl` | integer | OPTIONAL | Recommended cache duration in seconds. Default: 3600. |
 
-### 3.9 Attestations
+### 3.10 Attestations
 
 Each attestation in the `trust.attestations` array is an object:
 
@@ -589,6 +608,13 @@ A complete card with all fields:
     "model": "claude-sonnet-4-20250514",
     "version": "1.2.0",
     "framework": "custom"
+  },
+  "voice": {
+    "name": "Kai",
+    "style": "warm, direct, slightly playful",
+    "preferredTTS": "elevenlabs",
+    "voiceId": "optional-voice-id",
+    "sampleUrl": "https://reflectt.ai/agents/kai/voice-sample.mp3"
   },
   "capabilities": [
     "code-generation",

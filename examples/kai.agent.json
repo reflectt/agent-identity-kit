@@ -19,6 +19,13 @@
     "model": "claude-sonnet-4-20250514",
     "version": "1.2.0"
   },
+  "voice": {
+    "name": "Kai",
+    "style": "warm, direct, slightly playful",
+    "preferredTTS": "elevenlabs",
+    "voiceId": "optional-voice-id",
+    "sampleUrl": "https://reflectt.ai/agents/kai/voice-sample.mp3"
+  },
   "capabilities": [
     "code-generation",
     "task-management",
