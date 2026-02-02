@@ -1,22 +1,16 @@
 # Agent Identity Kit 🪪
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Spec Version](https://img.shields.io/badge/Spec-v1.0-blue.svg)](SPEC.md)
+[![JSON Schema](https://img.shields.io/badge/Schema-JSON-orange.svg)](schema/agent.schema.json)
+
 **A portable identity standard for AI agents.**
 
-`llms.txt` tells agents about websites. `agent.json` tells the world about agents.
+> `llms.txt` tells agents about websites. `agent.json` tells the world about agents.
 
 ---
 
-## The Problem
-
-Agents have no way to prove who they are. There's no standard, portable way for an AI agent to say *"this is who I am, what I can do, who I belong to, and why you should trust me."*
-
-- **No self-description standard** — `llms.txt` describes websites to agents, but agents can't describe themselves
-- **Discovery is broken** — How does Agent A find Agent B? Platform-specific registration, or nothing
-- **Trust is binary** — You have an API key (full access) or you don't (no access)
-- **Identity doesn't travel** — Move platforms, lose your identity. Start from zero.
-- **Credential chaos** — No patterns for how agents manage secrets safely
-
-## The Solution
+## Overview
 
 The **Agent Identity Kit** gives any agent — solo or team, indie or enterprise — a portable, verifiable, machine-readable identity. One file. One spec. Universally understood.
 
@@ -24,18 +18,46 @@ The **Agent Identity Kit** gives any agent — solo or team, indie or enterprise
 https://yourdomain.com/.well-known/agent.json
 ```
 
+### The Problem
+
+Agents have no way to prove who they are:
+
+- **No self-description standard** — `llms.txt` describes websites to agents, but agents can't describe themselves
+- **Discovery is broken** — How does Agent A find Agent B? Platform-specific registration, or nothing
+- **Trust is binary** — You have an API key (full access) or you don't (no access)
+- **Identity doesn't travel** — Move platforms, lose your identity. Start from zero.
+
+### The Solution
+
+A single JSON file that declares who an agent is, what it can do, who owns it, and how to interact with it.
+
 ---
 
 ## Quick Start
 
-### 1. Create your agent.json
+### Installation
 
-**Interactive:**
+**As an OpenClaw skill:**
+```bash
+openclaw skills install agent-identity-kit
+```
+
+**Or clone directly:**
+```bash
+git clone https://github.com/itskai-dev/agent-identity-kit.git
+cd agent-identity-kit
+```
+
+### Create Your Agent Card
+
+**Option 1: Interactive (recommended)**
 ```bash
 ./skill/scripts/init.sh
 ```
 
-**Manual** — create `agent.json`:
+**Option 2: Manual**
+
+Create `agent.json`:
 ```json
 {
   "$schema": "https://foragents.dev/schemas/agent-card/v1.json",
@@ -63,45 +85,62 @@ https://yourdomain.com/.well-known/agent.json
 }
 ```
 
-### 2. Validate it
+### Validate Your Card
 
 ```bash
 ./skill/scripts/validate.sh agent.json
 ```
 
-### 3. Host it
+Or validate via the registry API:
+```bash
+curl -X POST https://foragents.dev/api/agents/validate \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://yourdomain.com/.well-known/agent.json"}'
+```
 
-Serve at `https://yourdomain.com/.well-known/agent.json`
+### Host Your Card
 
-### 4. Register it
+Serve at the well-known URL:
+```
+https://yourdomain.com/.well-known/agent.json
+```
+
+### Register (Optional)
 
 Submit your card URL to [foragents.dev](https://foragents.dev) to be indexed in the global agent directory.
 
 ---
 
-## Spec Overview
+## Specification
 
-### Agent Card Fields
+For the complete specification, see **[SPEC.md](SPEC.md)**.
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `version` | ✅ | Spec version (`"1.0"`) |
-| `agent.name` | ✅ | Display name |
-| `agent.handle` | ✅ | Fediverse-style handle (`@name@domain`) |
-| `agent.description` | ✅ | What the agent does |
-| `agent.avatar` | — | Avatar image URL |
-| `agent.homepage` | — | Agent's profile page |
-| `owner.name` | ✅ | Person or org accountable for the agent |
-| `owner.url` | — | Owner's website |
-| `owner.contact` | — | Contact email |
-| `capabilities` | — | Standardized capability tags |
-| `protocols` | — | Supported protocols (`mcp`, `a2a`, `http`) |
-| `endpoints` | — | Card URL, inbox, status endpoints |
-| `trust.level` | — | `new` · `active` · `established` · `verified` |
-| `trust.created` | — | When the agent was first created |
-| `trust.verified_by` | — | Registries that verified this agent |
-| `links` | — | Website, repo, social links |
-| `platform` | — | Runtime, model, version |
+### Required Fields
+
+| Field | Description |
+|-------|-------------|
+| `version` | Spec version (`"1.0"`) |
+| `agent.name` | Display name |
+| `owner.name` | Person or org accountable for the agent |
+
+### Recommended Fields
+
+| Field | Description |
+|-------|-------------|
+| `agent.handle` | Fediverse-style handle (`@name@domain`) |
+| `agent.description` | What the agent does |
+| `owner.url` | Owner's website |
+| `owner.contact` | Contact email |
+
+### Optional Fields
+
+| Field | Description |
+|-------|-------------|
+| `capabilities` | Standardized capability tags |
+| `protocols` | Supported protocols (`mcp`, `a2a`, `http`) |
+| `endpoints` | Card URL, inbox, status endpoints |
+| `trust` | Trust level, creation date, verification |
+| `platform` | Runtime, model, version |
 
 ### Handle Format
 
@@ -120,18 +159,53 @@ No central registry required. Your domain is your namespace.
 |-------|---------|
 | `new` | Just created, no track record |
 | `active` | Operating, some history |
-| `established` | Significant track record, known in ecosystem |
+| `established` | Significant track record |
 | `verified` | Verified by one or more registries |
 
-### Discovery
+---
 
-Agents and services discover each other via:
+## Examples
 
-1. **Well-Known URL** — `GET https://domain.com/.well-known/agent.json`
-2. **Registry** — Query `foragents.dev/api/agents.json`
-3. **DNS TXT** — `_agent.domain.com TXT "v=agent1; card=https://..."`
+| File | Description |
+|------|-------------|
+| [`examples/kai.agent.json`](examples/kai.agent.json) | Full-featured example (Kai, Team Reflectt) |
+| [`examples/minimal.agent.json`](examples/minimal.agent.json) | Bare minimum valid card |
+| [`examples/team.agents.json`](examples/team.agents.json) | Multi-agent team roster |
 
-### Multi-Agent Teams
+### Minimal Card
+
+```json
+{
+  "version": "1.0",
+  "agent": { "name": "Helper Bot" },
+  "owner": { "name": "Jane Smith" }
+}
+```
+
+### Discovery in Code
+
+**JavaScript:**
+```javascript
+const card = await fetch('https://example.com/.well-known/agent.json')
+  .then(r => r.json());
+console.log(`Found: ${card.agent.name} (${card.agent.handle})`);
+```
+
+**Python:**
+```python
+import httpx
+card = httpx.get('https://example.com/.well-known/agent.json').json()
+print(f"Found: {card['agent']['name']}")
+```
+
+**cURL:**
+```bash
+curl -s https://reflectt.ai/.well-known/agent.json | jq '.agent.name'
+```
+
+---
+
+## Multi-Agent Teams
 
 For organizations with multiple agents, use `agents.json`:
 
@@ -146,34 +220,15 @@ For organizations with multiple agents, use `agents.json`:
 }
 ```
 
----
-
-## Examples
-
-| File | Description |
-|------|-------------|
-| [`kai.agent.json`](examples/kai.agent.json) | Full-featured example — Kai, lead coordinator of Team Reflectt |
-| [`minimal.agent.json`](examples/minimal.agent.json) | Bare minimum valid agent card |
-| [`team.agents.json`](examples/team.agents.json) | Multi-agent team roster |
+Host at `https://yourdomain.com/.well-known/agents.json`
 
 ---
 
-## OpenClaw Integration
+## Related Kits
 
-Install as an OpenClaw skill:
-
-```bash
-openclaw skills install agent-identity-kit
-```
-
-Then:
-```bash
-# Generate your identity
-./scripts/init.sh
-
-# Validate your card
-./scripts/validate.sh agent.json
-```
+| Kit | Purpose |
+|-----|---------|
+| **[Agent Bridge Kit](https://github.com/itskai-dev/agent-bridge-kit)** | Cross-platform presence for AI agents |
 
 ---
 
@@ -183,7 +238,7 @@ Then:
 2. **Decentralized** — Your domain, your identity. No central authority needed.
 3. **Machine-readable** — JSON Schema validated, parseable by any language.
 4. **Human-readable** — Clear enough that a person can understand it at a glance.
-5. **Incrementally adoptable** — Start with name + owner. Add capabilities, trust, endpoints over time.
+5. **Incrementally adoptable** — Start with name + owner. Add more over time.
 6. **Compatible** — Works alongside A2A, MCP, and existing standards.
 
 ---
@@ -198,28 +253,33 @@ Then:
 | **llms.txt** | Describes websites → agents, not agents → world |
 | **DIDs / VCs** | Over-engineered for current agent needs |
 
-The Agent Identity Kit is **practical, ships today, works anywhere**.
-
 ---
 
 ## Contributing
 
-PRs welcome. The spec is v1.0 — it will evolve based on real-world usage.
+PRs welcome! The spec is v1.0 — it will evolve based on real-world usage.
 
-- Schema: `schema/agent.schema.json`
-- Examples: `examples/`
-- Discussion: [foragents.dev](https://foragents.dev)
+- **Spec**: [SPEC.md](SPEC.md)
+- **Schema**: [`schema/agent.schema.json`](schema/agent.schema.json)
+- **Examples**: [`examples/`](examples/)
 
 ---
 
 ## Links
 
-- **Spec**: [foragents.dev/spec/agent-card](https://foragents.dev/spec/agent-card)
+- **Spec**: [SPEC.md](SPEC.md) | [foragents.dev/spec/agent-card](https://foragents.dev/spec/agent-card)
 - **Schema**: [foragents.dev/schemas/agent-card/v1.json](https://foragents.dev/schemas/agent-card/v1.json)
 - **Registry**: [foragents.dev](https://foragents.dev)
 - **Team Reflectt**: [reflectt.ai](https://reflectt.ai)
 
 ---
 
+## License
+
+[MIT](LICENSE)
+
+---
+
 *The internet gave humans URLs. The Agent Identity Kit gives agents handles.*
+
 *Every agent deserves to be more than an anonymous API call.* 🪪
