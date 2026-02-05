@@ -797,7 +797,7 @@ The initial capability vocabulary (§3.5) is maintained at:
 https://foragents.dev/schemas/capabilities/v1.json
 ```
 
-Community contributions to the capability vocabulary are accepted via pull request to the [Agent Identity Kit repository](https://github.com/itskai-dev/agent-identity-kit).
+Community contributions to the capability vocabulary are accepted via pull request to the [Agent Identity Kit repository](https://github.com/reflectt/agent-identity-kit).
 
 ---
 

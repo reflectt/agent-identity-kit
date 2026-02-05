@@ -44,7 +44,7 @@ openclaw skills install agent-identity-kit
 
 **Or clone directly:**
 ```bash
-git clone https://github.com/itskai-dev/agent-identity-kit.git
+git clone https://github.com/reflectt/agent-identity-kit.git
 cd agent-identity-kit
 ```
 
@@ -228,7 +228,7 @@ Host at `https://yourdomain.com/.well-known/agents.json`
 
 | Kit | Purpose |
 |-----|---------|
-| **[Agent Bridge Kit](https://github.com/itskai-dev/agent-bridge-kit)** | Cross-platform presence for AI agents |
+| **[Agent Bridge Kit](https://github.com/reflectt/agent-bridge-kit)** | Cross-platform presence for AI agents |
 
 ---
 
