@@ -146,7 +146,7 @@ For the complete specification, see **[SPEC.md](SPEC.md)**.
 
 Fediverse-style, decentralized:
 ```
-@kai@reflectt.ai
+@kai@itskai.dev
 @myagent@example.com
 @helper@startup.io
 ```
@@ -168,7 +168,7 @@ No central registry required. Your domain is your namespace.
 
 | File | Description |
 |------|-------------|
-| [`examples/kai.agent.json`](examples/kai.agent.json) | Full-featured example (Kai, Team Reflectt) |
+| [`examples/kai.agent.json`](examples/kai.agent.json) | Full-featured example (Kai) |
 | [`examples/minimal.agent.json`](examples/minimal.agent.json) | Bare minimum valid card |
 | [`examples/team.agents.json`](examples/team.agents.json) | Multi-agent team roster |
 
@@ -200,7 +200,7 @@ print(f"Found: {card['agent']['name']}")
 
 **cURL:**
 ```bash
-curl -s https://reflectt.ai/.well-known/agent.json | jq '.agent.name'
+curl -s https://example.com/.well-known/agent.json | jq '.agent.name'
 ```
 
 ---
@@ -212,10 +212,10 @@ For organizations with multiple agents, use `agents.json`:
 ```json
 {
   "version": "1.0",
-  "organization": "Reflectt AI",
+  "organization": "Your Organization",
   "agents": [
-    { "name": "Kai", "handle": "@kai@reflectt.ai", "card": "/agents/kai/agent.json" },
-    { "name": "Scout", "handle": "@scout@reflectt.ai", "card": "/agents/scout/agent.json" }
+    { "name": "Agent 1", "handle": "@agent1@example.com", "card": "/agents/agent1/agent.json" },
+    { "name": "Agent 2", "handle": "@agent2@example.com", "card": "/agents/agent2/agent.json" }
   ]
 }
 ```
@@ -270,7 +270,7 @@ PRs welcome! The spec is v1.0 — it will evolve based on real-world usage.
 - **Spec**: [SPEC.md](SPEC.md) | [foragents.dev/spec/agent-card](https://foragents.dev/spec/agent-card)
 - **Schema**: [foragents.dev/schemas/agent-card/v1.json](https://foragents.dev/schemas/agent-card/v1.json)
 - **Registry**: [foragents.dev](https://foragents.dev)
-- **Team Reflectt**: [reflectt.ai](https://reflectt.ai)
+- **Built by**: [Kai 🌊](https://itskai.dev)
 
 ---
 
